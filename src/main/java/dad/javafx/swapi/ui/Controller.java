@@ -26,7 +26,7 @@ import javafx.scene.layout.GridPane;
 
 public class Controller implements Initializable {
 	
-	// logic
+	// business logic
 	
 	private SWAPIService service = new SWAPIService();
 	
@@ -108,14 +108,21 @@ public class Controller implements Initializable {
 		
 		try {
 			
-			for (int i = 1; i <= 5; i++) {
+			for (int i = 1; i <= 30; i++) {
 			
 				People people = service.getPeople(i);
+
+				if (people == null) continue;
 				
+				// mapeo de objetos
 				Personaje personaje = new Personaje();
 				personaje.setNombre(people.getName());
-				personaje.setAltura(Integer.parseInt(people.getHeight()));
-				personaje.setPeso(Integer.parseInt(people.getMass()));
+				try {
+					personaje.setAltura(Integer.parseInt(people.getHeight()));
+				} catch (NumberFormatException e) {} 
+				try {
+					personaje.setPeso(Integer.parseInt(people.getMass()));
+				} catch (NumberFormatException e) {} 
 				
 				for (String vehicleUrl : people.getVehicles()) {
 					Vehicle vehicle = service.getVehicle(vehicleUrl);

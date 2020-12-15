@@ -1,5 +1,6 @@
 package dad.javafx.swapi.api;
 
+import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
@@ -11,11 +12,17 @@ public class SWAPIService {
 
 	public People getPeople(int peopleId) throws UnirestException {
 		System.out.println("recuperando people " + peopleId);
-		return Unirest
-			.get("https://swapi.dev/api/people/{id}")
-			.routeParam("id", "" + peopleId)
-			.asObject(People.class)
-			.getBody();
+		
+		HttpResponse<People> response = 
+				Unirest
+					.get("https://swapi.dev/api/people/{id}")
+					.routeParam("id", "" + peopleId)
+					.asObject(People.class);
+		
+		if (response.getStatus() != 200) return null;
+		
+		return response.getBody();
+		
 	}
 
 	public Vehicle getVehicle(String vehicleUrl) throws UnirestException {
